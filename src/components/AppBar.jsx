@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useAuth } from '../context/AuthContext';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -19,6 +20,7 @@ const settings = ['Logout'];
 
 function ResponsiveAppBar() {
     const navigate = useNavigate()
+    const { user } = useAuth()
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -141,7 +143,7 @@ function ResponsiveAppBar() {
                     <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title="Open settings">
                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                <Avatar alt="Silvanna Farías" src="/static/images/avatar/2.jpg" />
+                                <Avatar>{user?.name?.[0]?.toUpperCase()}</Avatar>
                             </IconButton>
                         </Tooltip>
                         <Menu

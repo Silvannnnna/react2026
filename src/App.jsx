@@ -4,6 +4,7 @@ import Login from './views/Login'
 import Profile from './views/Profile'
 import ResponsiveAppBar from './components/AppBar'
 import Info from './views/Info'
+import { AuthProvider } from './context/AuthContext'
 
 function AppContent() {
   const location = useLocation();
@@ -22,11 +23,11 @@ function AppContent() {
 
   function App() {
     return (
-      <>
+      <AuthProvider>
         <BrowserRouter>
           <AppContent />
         </BrowserRouter>
-      </>
+      </AuthProvider>
     )
   }
 export default App;
