@@ -20,7 +20,7 @@ const settings = ['Logout'];
 
 function ResponsiveAppBar() {
     const navigate = useNavigate()
-    const { user } = useAuth()
+    const { user, logout } = useAuth()
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -46,10 +46,10 @@ function ResponsiveAppBar() {
 
     const handleCloseUserMenu = (e) => {
         const text = e.currentTarget.innerText.trim().toLowerCase()
-        console.log(text)
         if (text === 'logout') {
+            logout()
             navigate("/")
-        } 
+        }
         setAnchorElUser(null);
     };
 

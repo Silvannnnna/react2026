@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import List from '@mui/material/List'
@@ -12,21 +13,37 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Alert from '@mui/material/Alert'
 import DeleteIcon from '@mui/icons-material/Delete'
 import Divider from '@mui/material/Divider'
+import { useAuth } from '../context/AuthContext'
 
 const emptyForm = { name: '', username: '', password: '' }
 
 function Info() {
+  const { token, logout } = useAuth()
+  const navigate = useNavigate()
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [form, setForm] = useState(emptyForm)
   const [submitting, setSubmitting] = useState(false)
 
+  const authHeaders = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`,
+  }
+
+  const handleUnauthorized = () => {
+    logout()
+    navigate('/')
+  }
+
   const fetchUsers = () => {
     setLoading(true)
-    fetch('/users')
-      .then((res) => res.json())
-      .then((data) => setUsers(data))
+    fetch(`${import.meta.env.VITE_API_URL ?? ''}/users`, { headers: { 'Authorization': `Bearer ${token}` } })
+      .then((res) => {
+        if (res.status === 401) { handleUnauthorized(); return [] }
+        return res.json()
+      })
+      .then((data) => { if (data) setUsers(data) })
       .catch(() => setError('No se pudo cargar la lista de usuarios'))
       .finally(() => setLoading(false))
   }
@@ -37,11 +54,12 @@ function Info() {
     e.preventDefault()
     setSubmitting(true)
     try {
-      const res = await fetch('/users', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL ?? ''}/users`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: authHeaders,
         body: JSON.stringify(form),
       })
+      if (res.status === 401) { handleUnauthorized(); return }
       if (!res.ok) throw new Error()
       setForm(emptyForm)
       fetchUsers()
@@ -54,7 +72,11 @@ function Info() {
 
   const handleDelete = async (id) => {
     try {
-      await fetch(`/users/${id}`, { method: 'DELETE' })
+      const res = await fetch(`${import.meta.env.VITE_API_URL ?? ''}/users/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` },
+      })
+      if (res.status === 401) { handleUnauthorized(); return }
       setUsers((prev) => prev.filter((u) => u._id !== id))
     } catch {
       setError('No se pudo eliminar el usuario')
