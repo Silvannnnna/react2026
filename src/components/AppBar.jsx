@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useAuth } from '../context/AuthContext';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -18,9 +17,8 @@ import { useNavigate } from 'react-router-dom';
 const pages = ['Profile', 'Info'];
 const settings = ['Logout'];
 
-function ResponsiveAppBar() {
+function ResponsiveAppBar({ user, logout }) {
     const navigate = useNavigate()
-    const { user, logout } = useAuth()
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
 

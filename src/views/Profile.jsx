@@ -1,12 +1,9 @@
-import { useAuth } from '../context/AuthContext'
 import Typography from '@mui/material/Typography'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Box from '@mui/material/Box'
 
-const Profile = () => {
-  const { user } = useAuth()
-
+const Profile = ({ user }) => {
   if (!user) return <Typography sx={{ m: 4 }}>No hay usuario autenticado.</Typography>
 
   return (

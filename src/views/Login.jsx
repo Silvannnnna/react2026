@@ -4,11 +4,9 @@ import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import Alert from '@mui/material/Alert'
-import { useAuth } from '../context/AuthContext'
 
-const Login = () => {
+const Login = ({ login }) => {
   const navigate = useNavigate()
-  const { login } = useAuth()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -19,14 +17,8 @@ const Login = () => {
     setError('')
     setLoading(true)
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL ?? ''}/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
-      })
-      const data = await res.json()
+      const data = await login({ username, password })
       if (data.login) {
-        login(data.user, data.token)
         navigate('/profile')
       } else {
         setError(data.msg)

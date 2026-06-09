@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import List from '@mui/material/List'
@@ -13,12 +13,10 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Alert from '@mui/material/Alert'
 import DeleteIcon from '@mui/icons-material/Delete'
 import Divider from '@mui/material/Divider'
-import { useAuth } from '../context/AuthContext'
 
 const emptyForm = { name: '', username: '', password: '' }
 
-function Info() {
-  const { token, logout } = useAuth()
+function Info({ token, logout }) {
   const navigate = useNavigate()
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
@@ -142,7 +140,10 @@ function Info() {
                 </IconButton>
               }
             >
-              <ListItemText primary={u.name} secondary={u.username} />
+              <ListItemText
+                primary={<Link to={`/users/${u.username}`} style={{ color: '#1976d2' }}>{u.name}</Link>}
+                secondary={u.username}
+              />
             </ListItem>
           ))}
         </List>
